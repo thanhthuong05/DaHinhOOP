@@ -8,63 +8,101 @@ namespace BaiTap_BanKing
 {
     class Account
     {
-        private double _balance;
+        private double balance;
 
+        public Account()
+        {
+        }
+        public Account(double balance)
+        {
+            this.balance = balance;
+        }
         public double Balance
         {
-            set { _balance = value;  }
-            get { return _balance; }
+            set { this.balance = value; }
+            get { return balance; }
         }
-        public virtual bool WithDraw(double amount)
+        public virtual bool RutTien(double amount)
         {
             return false;
         }
-        public virtual bool Deposit(double amount)
+        public virtual bool NapTien(double amount)
         {
             return false;
         }
-        public void PrintBalance()
+        public virtual void InHoaDon()
         {
-            Console.WriteLine("Balance: {0}", _balance);
         }
     }
-
-    //dinh nghia lop SavingAccount
-    class SavingAccount : Account
+    class SavingsAccount : Account
     {
-        private double _IntereRate = 0.8;
+        private double laisuat = 0.8;
 
-        public  SavingAccount() : base () { }
-        public SavingAccount(double balance) : base(balance)
+        public SavingsAccount()
         {
         }
-        public double InteresRate
+        public SavingsAccount(double balance, double laisuat) : base(balance)
         {
-            set { _IntereRate = value; }
-            get { return _IntereRate; }
+            this.laisuat = laisuat;
         }
-        public override bool WithDraw(double amount)
+        public double Laisuat
         {
-            return false;
+            set { laisuat = value; }
+            get { return laisuat; }
         }
-        public override bool Deposit(double amount)
+        public override bool RutTien(double amount)
         {
-            return false;
-        }
-        class CheckingAccount : Account
-        {
-            public CheckingAccount() : base() { }
-            public CheckingAccount(double balance ) : base(balance)
+            if (amount > 0 && amount <= Balance)
             {
+                Balance = Balance - (amount + amount * laisuat);
+                return true;
             }
-        }
-        public override bool WithDraw(double amount)
-        {
             return false;
         }
-        public override bool Deposit(double amount)
+        public override bool NapTien(double amount)
         {
+            if (amount > 0)
+            {
+                Balance = Balance + (amount + amount * laisuat);
+                return true;
+            }
             return false;
+        }
+        public override void InHoaDon()
+        {
+            Console.WriteLine("So su cua ban {0}", Balance);
+        }
+    }
+    class CheckingAccount : Account
+    {
+        public CheckingAccount()
+        {
+        }
+        public CheckingAccount(double balance) : base(balance)
+        {
+
+        }
+        public override bool RutTien(double amount)
+        {
+            if (amount > 0 && amount <= Balance)
+            {
+                Balance -= amount;
+                return true;
+            }
+            return false;
+        }
+        public override bool NapTien(double amount)
+        {
+            if (amount > 0)
+            {
+                Balance += amount;
+                return true;
+            }
+            return false;
+        }
+        public override void InHoaDon()
+        {
+            Console.WriteLine("So du cua ban {0}", Balance);
         }
     }
 }
